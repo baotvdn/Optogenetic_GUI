@@ -1,3 +1,4 @@
+#Senior Design
 from tkinter import *
 
 import RPi.GPIO as GPIO
