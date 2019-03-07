@@ -43,16 +43,40 @@ def exitProgram():
 
 root.title("Optogenetic Platform")
 #root.geometry('800x480')
-root.config(background = "#FFFFFF")
+#root.config(background = "#FFFFFF")
 
 
 leftFrame = Frame(root, width=600, height = 200)
 leftFrame.grid(row=0, column=0, padx=10, pady=2)
 #Label(leftFrame, text="Waveform").grid()
 
-#Waveform
-colorLog = Text(leftFrame, width = 30, height = 10, takefocus=0)
-colorLog.grid(row=0, column=0, padx=10, pady=2)
+#Channel
+channel = Text(leftFrame, width = 30, height = 10)
+channel.grid(row=0, column=0, padx=10, pady=2)
+Label(channel, text = "Channel", font="Helvetica 16 bold").grid(row=0, column=2, columnspan=3)
+
+
+def checkbar():
+	var_c = []
+#	mat = [[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],
+#	[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],
+#	[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7]]
+	mat = [1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24]
+	i = 1 
+	j = 0
+	for pick in mat:
+		var = IntVar()
+		chk = Checkbutton(channel, text=pick, variable=var)
+		chk.grid(row=i, column=j)
+		var_c.append(var)
+		j = j + 1
+		if j == 7:
+			i = i + 1
+			j = 0
+	return 
+
+chn = checkbar()
+
 
 #Frequency
 frequency = Frame(leftFrame, width=200, height = 200)
@@ -65,7 +89,7 @@ def sel():
 
 var = IntVar()
 
-Label(frequency, text = "Frequency").grid(row=0, column=0)
+Label(frequency, text = "Frequency", font="Helvetica 16 bold").grid(row=0, column=0)
 
 R1 = Radiobutton(frequency, text="0.5 Hz", variable=var, value=1, command=sel)
 R1.grid(row=1, column=0)
@@ -94,7 +118,7 @@ var_green = DoubleVar()
 var_blue = DoubleVar()
 
 btnFrame = Frame(leftFrame, width=200, height = 200)
-btnFrame.grid(row=3, column=0, padx=10, pady=2)
+btnFrame.grid(row=2, column=0, padx=10, pady=2)
 Label(btnFrame, text = "Brightness", font="Helvetica 16 bold").grid(row=1, column=1)
 
 red_led = Button(btnFrame, text="Red", command=red_on, height=2, width=8)
@@ -123,20 +147,53 @@ rightFrame = Frame(root, width=200, height = 600)
 rightFrame.grid(row=0, column=1, padx=10, pady=2)
 
 
-colorLog = Text(rightFrame, width = 30, height = 10, takefocus=0)
-colorLog.grid(row=0, column=0, columnspan=3, padx=10, pady=2)
+signal = Frame(rightFrame, width=200, height = 200)
+signal.grid(row=0, column=0, columnspan=3, padx=10, pady=2)
+
+#wave = Menubutton(top, text="wave", relief=RAISED)
+#wave.grid(row=0, column=0)
+tkvar = StringVar()
+choices = { 'Random','Sin','Step','Ram'}
+tkvar.set('Random') # set the default option
+ 
+wave = OptionMenu(signal, tkvar, *choices)
+Label(signal, text="Wave").grid(row = 0, column = 0)
+wave.grid(row = 0, column =1)
+ 
+# on change dropdown value
+def change_dropdown(*args):
+    print( tkvar.get() )
+ 
+# link function to change dropdown
+#tkvar.trace('a', change_dropdown)
+
+tkvar1 = StringVar()
+choices1 = { 'Pattern1','Pattern2','Pattern3','Pattern4'}
+tkvar1.set('Pattern1') # set the default option
+ 
+pattern = OptionMenu(signal, tkvar1, *choices1)
+Label(signal, text="Pattern").grid(row = 1, column = 0)
+pattern.grid(row = 1, column =1)
+
+Label(signal, text="Enter time in seconds").grid(row = 2, column =0)
+E1 = Entry(signal, bd =5)
+E1.grid(row = 2, column =1)
+
 
 circleCanvas = Canvas(rightFrame, width=100, height=100, bg='white')
 circleCanvas.grid(row=1, column=0, columnspan=3, padx=10, pady=2)
 
-run_button = Button(rightFrame, text="Run", command=led_off, height=2, width=8)
-run_button.grid(row=2, column=0)
+button = Frame(rightFrame, width=200, height = 200)
+button.grid(row=3, column=0, padx=10, pady=2)
 
-off_button = Button(rightFrame, text="Turn Off", command=led_off, height=2, width=8)
-off_button.grid(row=2, column=1)
+run_button = Button(button, text="Run", command=led_off, height=2, width=8)
+run_button.grid(row=0, column=0)
 
-exitButton = Button(rightFrame, text="Exit", command=exitProgram, height=2, width=6)
-exitButton.grid(row=2, column=2)
+off_button = Button(button, text="Turn Off", command=led_off, height=2, width=8)
+off_button.grid(row=0, column=3)
+
+exitButton = Button(button, text="Exit", command=exitProgram, height=2, width=8)
+exitButton.grid(row=0, column=6)
 
 '''
 exitButton = Button(win, text="Exit", command=exitProgram, height=2, width=6)
